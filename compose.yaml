@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: sqlplan
+      POSTGRES_PASSWORD: sqlplan
+      POSTGRES_DB: sqlplan
+    ports:
+      - "5432:5432"
