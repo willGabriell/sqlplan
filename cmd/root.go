@@ -49,10 +49,14 @@ func Execute() error {
 	dsn := flag.String("dsn", os.Getenv("PGDSN"), "DSN de conexão com o Postgres (ou variável PGDSN)")
 	query := flag.String("query", "", "query SQL a explicar")
 	file := flag.String("file", "", "arquivo .sql com a query a explicar")
+	top := flag.Int("top", 3, "quantos gargalos mostrar no resumo")
 	flag.Parse()
 
 	if *dsn == "" {
 		return fmt.Errorf("%w: informe --dsn ou defina PGDSN", ErrUsage)
+	}
+	if *top < 1 {
+		return fmt.Errorf("%w: --top precisa ser >= 1", ErrUsage)
 	}
 
 	q, err := resolveQuery(*query, *file)
@@ -86,6 +90,8 @@ func Execute() error {
 	if err != nil {
 		return err
 	}
+	bs := explain.FindBottlenecks(&res.Plan, res.ExecutionTime, *top)
+	render.Summary(os.Stdout, bs, res.ExecutionTime)
 	render.Tree(os.Stdout, &res.Plan)
 	return nil
 }

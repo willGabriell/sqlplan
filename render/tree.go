@@ -36,6 +36,19 @@ func Tree(w io.Writer, n *explain.PlanNode) {
 	printNode(w, n, rootTime, "", true, true)
 }
 
+// nodeLabel monta o nome exibido do nó — tipo + relação/índice quando
+// existem. Compartilhado entre a árvore e o resumo de gargalos.
+func nodeLabel(n *explain.PlanNode) string {
+	name := n.NodeType
+	switch {
+	case n.IndexName != "" && n.RelationName != "":
+		name += fmt.Sprintf(" using %s on %s", n.IndexName, n.RelationName)
+	case n.RelationName != "":
+		name += " on " + n.RelationName
+	}
+	return name
+}
+
 func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string, isLast, isRoot bool) {
 	if !isRoot {
 		branch := "├── "
@@ -45,13 +58,7 @@ func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string
 		fmt.Fprint(w, prefix+branch)
 	}
 
-	name := n.NodeType
-	switch {
-	case n.IndexName != "" && n.RelationName != "":
-		name += fmt.Sprintf(" using %s on %s", n.IndexName, n.RelationName)
-	case n.RelationName != "":
-		name += " on " + n.RelationName
-	}
+	name := nodeLabel(n)
 
 	pct := 0.0
 	if rootTime > 0 {
