@@ -86,6 +86,6 @@ func Execute() error {
 	if err != nil {
 		return err
 	}
-	render.Tree(os.Stdout, &res.Plan, 0)
+	render.Tree(os.Stdout, &res.Plan)
 	return nil
 }
