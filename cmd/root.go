@@ -13,6 +13,7 @@ import (
 
 	"sqlplan/db"
 	"sqlplan/explain"
+	"sqlplan/render"
 )
 
 // ErrUsage indica uso incorreto das flags (dispara exit code 2 + help).
@@ -81,7 +82,10 @@ func Execute() error {
 		return fmt.Errorf("falha ao executar explain: %w", err)
 	}
 
-	os.Stdout.Write(out)
-	fmt.Println()
+	res, err := explain.ParsePlan(out)
+	if err != nil {
+		return err
+	}
+	render.Tree(os.Stdout, &res.Plan, 0)
 	return nil
 }
