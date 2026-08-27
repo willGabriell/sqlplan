@@ -50,6 +50,7 @@ func Execute() error {
 	query := flag.String("query", "", "query SQL a explicar")
 	file := flag.String("file", "", "arquivo .sql com a query a explicar")
 	top := flag.Int("top", 3, "quantos gargalos mostrar no resumo")
+	glossary := flag.Bool("glossary", false, "explica os tipos de nó que apareceram no plano")
 	flag.Parse()
 
 	if *dsn == "" {
@@ -93,6 +94,9 @@ func Execute() error {
 	explain.AssignIDs(&res.Plan, new(int))
 	bs := explain.FindBottlenecks(&res.Plan, res.ExecutionTime, *top)
 	render.Summary(os.Stdout, bs, res.ExecutionTime)
-	render.Tree(os.Stdout, &res.Plan)
+	types := render.Tree(os.Stdout, &res.Plan)
+	if *glossary {
+		render.Glossary(os.Stdout, types)
+	}
 	return nil
 }

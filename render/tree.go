@@ -31,9 +31,14 @@ var baseColor = map[string]*color.Color{
 var highlightColor = color.New(color.FgRed, color.Bold)
 
 // Tree escreve n e seus filhos em w, desenhados como árvore (`├──`/`└──`/`│`).
-func Tree(w io.Writer, n *explain.PlanNode) {
+// Devolve os NodeType distintos, na ordem em que apareceram na árvore — usado
+// pelo glossário opcional (--glossary) pra não percorrer a árvore de novo.
+func Tree(w io.Writer, n *explain.PlanNode) []string {
 	rootTime := n.ActualTotalTime
-	printNode(w, n, rootTime, "", true, true)
+	seen := make(map[string]bool)
+	var types []string
+	printNode(w, n, rootTime, "", true, true, seen, &types)
+	return types
 }
 
 // nodeLabel monta o nome exibido do nó — tipo + relação/índice quando
@@ -49,7 +54,12 @@ func nodeLabel(n *explain.PlanNode) string {
 	return name
 }
 
-func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string, isLast, isRoot bool) {
+func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string, isLast, isRoot bool, seen map[string]bool, types *[]string) {
+	if !seen[n.NodeType] {
+		seen[n.NodeType] = true
+		*types = append(*types, n.NodeType)
+	}
+
 	if !isRoot {
 		branch := "├── "
 		if isLast {
@@ -92,6 +102,6 @@ func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string
 	}
 
 	for i := range n.Plans {
-		printNode(w, &n.Plans[i], rootTime, childPrefix, i == len(n.Plans)-1, false)
+		printNode(w, &n.Plans[i], rootTime, childPrefix, i == len(n.Plans)-1, false, seen, types)
 	}
 }

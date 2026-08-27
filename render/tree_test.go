@@ -75,6 +75,35 @@ func TestTreeIndexScan(t *testing.T) {
 	}
 }
 
+// TestTreeReturnsDistinctNodeTypes garante que o retorno de Tree traz cada
+// NodeType uma única vez, na ordem de aparição — usado pelo --glossary.
+func TestTreeReturnsDistinctNodeTypes(t *testing.T) {
+	color.NoColor = true
+
+	n := explain.PlanNode{
+		NodeType: "Nested Loop",
+		Plans: []explain.PlanNode{
+			{NodeType: "Seq Scan", RelationName: "a"},
+			{NodeType: "Seq Scan", RelationName: "b"},
+		},
+	}
+
+	explain.AssignIDs(&n, new(int))
+
+	var buf bytes.Buffer
+	types := Tree(&buf, &n)
+
+	want := []string{"Nested Loop", "Seq Scan"}
+	if len(types) != len(want) {
+		t.Fatalf("got %v, want %v", types, want)
+	}
+	for i := range want {
+		if types[i] != want[i] {
+			t.Fatalf("got %v, want %v", types, want)
+		}
+	}
+}
+
 // TestTreeBranches trava o desenho de galhos (`├──`/`└──`/`│`) em 3+ níveis
 // com múltiplos irmãos no mesmo nível.
 func TestTreeBranches(t *testing.T) {
