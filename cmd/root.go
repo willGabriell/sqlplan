@@ -90,6 +90,7 @@ func Execute() error {
 	if err != nil {
 		return err
 	}
+	explain.AssignIDs(&res.Plan, new(int))
 	bs := explain.FindBottlenecks(&res.Plan, res.ExecutionTime, *top)
 	render.Summary(os.Stdout, bs, res.ExecutionTime)
 	render.Tree(os.Stdout, &res.Plan)

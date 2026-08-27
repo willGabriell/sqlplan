@@ -58,7 +58,7 @@ func printNode(w io.Writer, n *explain.PlanNode, rootTime float64, prefix string
 		fmt.Fprint(w, prefix+branch)
 	}
 
-	name := nodeLabel(n)
+	name := fmt.Sprintf("[%d] %s", n.ID, nodeLabel(n))
 
 	pct := 0.0
 	if rootTime > 0 {

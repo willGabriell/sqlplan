@@ -26,4 +26,19 @@ type PlanNode struct {
 	ActualRows  float64    `json:"Actual Rows"`
 	ActualLoops int64      `json:"Actual Loops"`
 	Plans       []PlanNode `json:"Plans,omitempty"`
+
+	// ID não vem do Postgres — atribuído por AssignIDs pra cruzar o resumo
+	// de gargalos com o nó certo na árvore.
+	ID int `json:"-"`
+}
+
+// AssignIDs numera os nós em pré-ordem (raiz, depois filhos da esquerda pra
+// direita) começando em 1 — mesma ordem em que render.Tree imprime, pra que
+// o ID do resumo de gargalos aponte pro nó certo da árvore.
+func AssignIDs(n *PlanNode, counter *int) {
+	*counter++
+	n.ID = *counter
+	for i := range n.Plans {
+		AssignIDs(&n.Plans[i], counter)
+	}
 }

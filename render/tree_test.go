@@ -41,9 +41,11 @@ func TestTree(t *testing.T) {
 	}
 
 	want := "" +
-		"Hash Join (cost=200.00..400.00 rows=500) (actual rows=480 time=5.120ms, 100.0% do total)\n" +
-		"├── Seq Scan on orders (cost=0.00..180.00 rows=8000) (actual rows=8000 time=1.900ms, 37.1% do total) ⚠ seq scan retornando muitas linhas\n" +
-		"└── Hash (cost=100.00..100.00 rows=500) (actual rows=500 time=0.800ms, 15.6% do total)\n"
+		"[1] Hash Join (cost=200.00..400.00 rows=500) (actual rows=480 time=5.120ms, 100.0% do total)\n" +
+		"├── [2] Seq Scan on orders (cost=0.00..180.00 rows=8000) (actual rows=8000 time=1.900ms, 37.1% do total) ⚠ seq scan retornando muitas linhas\n" +
+		"└── [3] Hash (cost=100.00..100.00 rows=500) (actual rows=500 time=0.800ms, 15.6% do total)\n"
+
+	explain.AssignIDs(&n, new(int))
 
 	var buf bytes.Buffer
 	Tree(&buf, &n)
@@ -62,10 +64,12 @@ func TestTreeIndexScan(t *testing.T) {
 		RelationName: "users",
 	}
 
+	explain.AssignIDs(&n, new(int))
+
 	var buf bytes.Buffer
 	Tree(&buf, &n)
 
-	want := "Index Scan using users_pkey on users (cost=0.00..0.00 rows=0) (actual rows=0 time=0.000ms, 0.0% do total)\n"
+	want := "[1] Index Scan using users_pkey on users (cost=0.00..0.00 rows=0) (actual rows=0 time=0.000ms, 0.0% do total)\n"
 	if buf.String() != want {
 		t.Fatalf("got:\n%s\nwant:\n%s", buf.String(), want)
 	}
@@ -93,11 +97,13 @@ func TestTreeBranches(t *testing.T) {
 	}
 
 	want := "" +
-		"Hash Join (cost=0.00..0.00 rows=0) (actual rows=0 time=10.000ms, 100.0% do total)\n" +
-		"├── Hash Join (cost=0.00..0.00 rows=0) (actual rows=0 time=5.000ms, 50.0% do total)\n" +
-		"│   ├── Seq Scan on a (cost=0.00..0.00 rows=0) (actual rows=0 time=2.000ms, 20.0% do total)\n" +
-		"│   └── Seq Scan on b (cost=0.00..0.00 rows=0) (actual rows=0 time=3.000ms, 30.0% do total)\n" +
-		"└── Hash (cost=0.00..0.00 rows=0) (actual rows=0 time=4.000ms, 40.0% do total)\n"
+		"[1] Hash Join (cost=0.00..0.00 rows=0) (actual rows=0 time=10.000ms, 100.0% do total)\n" +
+		"├── [2] Hash Join (cost=0.00..0.00 rows=0) (actual rows=0 time=5.000ms, 50.0% do total)\n" +
+		"│   ├── [3] Seq Scan on a (cost=0.00..0.00 rows=0) (actual rows=0 time=2.000ms, 20.0% do total)\n" +
+		"│   └── [4] Seq Scan on b (cost=0.00..0.00 rows=0) (actual rows=0 time=3.000ms, 30.0% do total)\n" +
+		"└── [5] Hash (cost=0.00..0.00 rows=0) (actual rows=0 time=4.000ms, 40.0% do total)\n"
+
+	explain.AssignIDs(&n, new(int))
 
 	var buf bytes.Buffer
 	Tree(&buf, &n)

@@ -17,7 +17,7 @@ func Summary(w io.Writer, bs []explain.Bottleneck, totalExecutionTime float64) {
 	fmt.Fprintf(w, "Top %d gargalos (de %.3fms totais):\n", len(bs), totalExecutionTime)
 
 	for i, b := range bs {
-		label := nodeLabel(b.Node)
+		label := fmt.Sprintf("[%d] %s", b.Node.ID, nodeLabel(b.Node))
 		line := fmt.Sprintf("  %d. %-32s %8.3fms  (%4.1f%%)", i+1, label, b.SelfTime, b.Percent)
 		if c, ok := baseColor[b.Node.NodeType]; ok {
 			c.Fprintln(w, line)
