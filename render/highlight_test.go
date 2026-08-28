@@ -3,7 +3,7 @@ package render
 import (
 	"testing"
 
-	"sqlplan/explain"
+	"github.com/willGabriell/sqlplan/explain"
 )
 
 func TestEvaluateNode(t *testing.T) {

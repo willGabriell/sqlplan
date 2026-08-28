@@ -6,7 +6,7 @@ import (
 
 	"github.com/fatih/color"
 
-	"sqlplan/explain"
+	"github.com/willGabriell/sqlplan/explain"
 )
 
 func TestSummary(t *testing.T) {

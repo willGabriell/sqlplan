@@ -1,6 +1,6 @@
 package render
 
-import "sqlplan/explain"
+import "github.com/willGabriell/sqlplan/explain"
 
 // Limiares ajustáveis. Constantes num lugar só, não hardcoded espalhado.
 const (

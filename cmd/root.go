@@ -11,9 +11,9 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"sqlplan/db"
-	"sqlplan/explain"
-	"sqlplan/render"
+	"github.com/willGabriell/sqlplan/db"
+	"github.com/willGabriell/sqlplan/explain"
+	"github.com/willGabriell/sqlplan/render"
 )
 
 // ErrUsage indica uso incorreto das flags (dispara exit code 2 + help).

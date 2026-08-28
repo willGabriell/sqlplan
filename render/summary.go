@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"sqlplan/explain"
+	"github.com/willGabriell/sqlplan/explain"
 )
 
 // Summary escreve o bloco "Top N gargalos" antes da árvore — os nós que

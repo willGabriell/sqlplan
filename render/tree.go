@@ -9,7 +9,7 @@ import (
 
 	"github.com/fatih/color"
 
-	"sqlplan/explain"
+	"github.com/willGabriell/sqlplan/explain"
 )
 
 // baseColor mapeia tipo de nó pra cor base — mesmo tipo, mesma cor entre

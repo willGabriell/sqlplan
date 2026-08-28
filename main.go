@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"sqlplan/cmd"
+	"github.com/willGabriell/sqlplan/cmd"
 )
 
 func main() {
