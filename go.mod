@@ -1,4 +1,4 @@
-module sqlplan
+module github.com/willGabriell/sqlplan
 
 go 1.25.0
 
