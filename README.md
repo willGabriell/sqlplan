@@ -24,7 +24,7 @@ Top 3 gargalos (de 2.400ms totais):
   3. Seq Scan on users                   0.306ms  (12.8%)
 
 └── Hash Join (cost=200.00..400.00 rows=500) (actual rows=480 time=5.120ms, 100.0% do total)
-    ├── Seq Scan on orders (cost=0.00..180.00 rows=8000) (actual rows=8000 time=1.900ms, 37.1% do total) ⚠  seq scan retornando muitas linhas
+    ├── Seq Scan on orders (cost=0.00..180.00 rows=8000) (actual rows=8000 time=1.900ms, 37.1% do total) ⚠ seq scan retornando muitas linhas
     └── Hash (cost=100.00..100.00 rows=500) (actual rows=500 time=0.800ms, 15.6% do total)
 ```
 

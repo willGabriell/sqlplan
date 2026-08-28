@@ -22,7 +22,7 @@ func EvaluateNode(n *explain.PlanNode) []Highlight {
 	var hs []Highlight
 
 	if n.NodeType == "Seq Scan" && n.ActualRows > SeqScanRowsThreshold {
-		hs = append(hs, Highlight{Reason: " seq scan retornando muitas linhas"})
+		hs = append(hs, Highlight{Reason: "seq scan retornando muitas linhas"})
 	}
 
 	planRows := float64(n.PlanRows)
@@ -30,7 +30,7 @@ func EvaluateNode(n *explain.PlanNode) []Highlight {
 	// max(1, lo) evita divisão por zero quando um dos dois lados é 0 e
 	// ainda conta como mismatch de verdade (ex: PlanRows=10000, ActualRows=0).
 	if hi/max(1, lo) > EstimateMismatchRatio {
-		hs = append(hs, Highlight{Reason: " estimativa muito distante da real"})
+		hs = append(hs, Highlight{Reason: "estimativa muito distante da real"})
 	}
 
 	return hs

@@ -20,7 +20,7 @@ func TestEvaluateNode(t *testing.T) {
 		{
 			name: "seq scan acima do limiar destaca",
 			node: explain.PlanNode{NodeType: "Seq Scan", ActualRows: 1001, PlanRows: 1001},
-			want: []string{" seq scan retornando muitas linhas"},
+			want: []string{"seq scan retornando muitas linhas"},
 		},
 		{
 			name: "index scan com muitas linhas não é seq scan, não destaca por essa regra",
@@ -30,12 +30,12 @@ func TestEvaluateNode(t *testing.T) {
 		{
 			name: "estimativa 10x pra mais destaca",
 			node: explain.PlanNode{NodeType: "Hash Join", ActualRows: 1000, PlanRows: 10},
-			want: []string{" estimativa muito distante da real"},
+			want: []string{"estimativa muito distante da real"},
 		},
 		{
 			name: "estimativa 10x pra menos destaca",
 			node: explain.PlanNode{NodeType: "Hash Join", ActualRows: 10, PlanRows: 1000},
-			want: []string{" estimativa muito distante da real"},
+			want: []string{"estimativa muito distante da real"},
 		},
 		{
 			name: "estimativa dentro da razão não destaca",
@@ -45,12 +45,12 @@ func TestEvaluateNode(t *testing.T) {
 		{
 			name: "actual rows zero não explode por divisão por zero",
 			node: explain.PlanNode{NodeType: "Hash Join", ActualRows: 0, PlanRows: 10000},
-			want: []string{" estimativa muito distante da real"},
+			want: []string{"estimativa muito distante da real"},
 		},
 		{
 			name: "plan rows zero não explode por divisão por zero",
 			node: explain.PlanNode{NodeType: "Seq Scan", ActualRows: 10000, PlanRows: 0},
-			want: []string{" seq scan retornando muitas linhas", " estimativa muito distante da real"},
+			want: []string{"seq scan retornando muitas linhas", "estimativa muito distante da real"},
 		},
 		{
 			name: "ambos zero não destaca",
@@ -60,7 +60,7 @@ func TestEvaluateNode(t *testing.T) {
 		{
 			name: "seq scan gordo e estimativa errada acumulam os dois",
 			node: explain.PlanNode{NodeType: "Seq Scan", ActualRows: 9987, PlanRows: 10},
-			want: []string{" seq scan retornando muitas linhas", " estimativa muito distante da real"},
+			want: []string{"seq scan retornando muitas linhas", "estimativa muito distante da real"},
 		},
 	}
 
